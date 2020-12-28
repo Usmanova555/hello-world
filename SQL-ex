@@ -1,0 +1,122 @@
+Sql-ex:
+
+task 1
+Select model, speed, hd from pc where price < 500
+task 2
+Select DISTINCT Product.maker from Product where Product.type = 'Printer'
+task 3
+Select model, ram, screen from laptop where price > 1000
+task 4
+Select * from Printer where color = 'y'
+task 5
+Select model, speed, hd from PC where (cd = '12x' or cd = '24x') and price < 600
+task 6
+Select DISTINCT maker, speed from Product, Laptop where Product.model = Laptop.model and hd >= 10
+task 7
+Select a.model, price from (Select model, price from PC Union
+Select model, price from Laptop Union
+Select model, price from Printer) AS a Join Product p ON a.model = p.model where p.maker = 'B'
+task 8
+Select DISTINCT maker from product where type = 'pc' except select DISTINCT product.maker from product where type = 'laptop'
+task 9
+Select DISTINCT Product.maker from Product, PC where speed >= 450 and Product.model = PC.model
+task 10
+Select DISTINCT model, price from printer where price >= (select max(price) from printer)
+task 11
+Select AVG(speed) from PC
+task 12
+Select AVG(speed) from Laptop where price > 1000
+task 13
+Select AVG(speed) from PC, product where product.maker = 'A' and PC.model = Product.model
+task 14
+Select DISTINCT Ships.class, Ships.name, Classes.country from Ships, Classes where Classes.numGuns >= 10 and Classes.class = Ships.class
+task 15
+Select hd from PC group by hd having count(hd) >= 2
+task 16
+SELECT DISTINCT p1.model, p2.model, p1.speed, p1.ram
+FROM PC p1, PC p2
+WHERE p1.speed = p2.speed AND p1.ram = p2.ram AND p1.model > p2.model
+task 17
+Select DISTINCT product.type, laptop.model, laptop.speed from laptop, product where speed < (Select MIN(speed) from pc) and product.type = 'laptop'
+task 18
+select distinct maker,price from printer inner join product ON printer.model= product.model where price = (select min(price) from printer where color = 'y') and color = 'y'
+task 19
+Select product.maker, AVG(screen) from laptop left join product on product.model = laptop.model group by product.maker
+task 20
+SELECT maker, COUNT(model) FROM product WHERE type = 'pc' GROUP BY product.maker
+HAVING COUNT (DISTINCT model) >= 3
+task 21
+Select product.maker, MAX(pc.price) from product, pc where product.model = pc.model group by product.maker
+task 22
+Select PC.speed, AVG(pc.price) from pc where pc.speed > 600 group by pc.speed
+task 23
+Select Distinct maker FROM product t1 JOIN pc t2 ON t1.model = t2.model where speed >= 750 and maker in (select maker FROM product t1 JOIN laptop t2 ON t1.model = t2.model where speed >=750)
+task 24
+Select model from (select model, price from pc union select model, price from laptop union select model, price from printer union select model, price from printer) t1 where price = (select MAX(price) from (select price from pc union select price from laptop union select price from printer) t2)
+task 25
+Select DISTINCT maker FROM product WHERE model IN (select model FROM pc WHERE ram = (select MIN(ram) from pc) and speed = (select MAX(speed) from pc WHERE ram = (select MIN(ram) from pc))) and maker in (select maker from product where type = 'printer')
+task 26
+Select sum(s.price)/sum(s.kol) as sredn from (select price, 1 as kol from pc, product where pc.model = product.model and product.maker = 'A' union all select price, 1 as kol from laptop, product where laptop.model = product.model and product.maker = 'A') as s
+task 27
+Select maker, AVG(hd) from product inner join pc on product.model = pc.model where maker in(select maker from product where type = 'printer') group by maker
+task 28
+Select count(maker) from product where maker in (select maker from product group by maker having count(maker) = 1)
+task 29
+Select point, date, sum(b), sum(a) from (Select point, date, sum(inc) as a, null as b from Income Group by point, date Union Select point, date, null as a, sum(out) as b from Outcome Group by point, date) as s Group by point, date order by point
+task 30
+Select point, date, sum(b), sum(a) from (Select point, date, sum(inc) as a, null as b from Income Group by point, date Union Select point, date, null as a, sum(out) as b from Outcome Group by point, date) as s Group by point, date Order by point
+task 31
+Select distinct class, country from classes where bore >= 16
+task 33
+Select s.ship from BATTLES b left join outcomes s on s.battle = b.name
+where b.name = 'North Atlantic' and s.result = 'sunk'
+task 34
+Select name from classes,ships where launched >=1922 and displacement>35000 and type='bb' and ships.class = classes.class
+task 35
+Select model, type from product where upper(model) not like '%[^A-Z]%' or model not like '%[^0-9]%'
+task 36
+Select name from ships where class = name union Select ship as name from classes,outcomes where classes.class = outcomes.ship
+task 37
+Select d.class from classes d left join (Select class, name from ships union
+Select ship, ship from outcomes) as s on s.class = d.class Group by d.class Having count(s.name) = 1
+task 38
+Select country from classes Group by country Having count(Distinct type) = 2
+task 40
+Select maker, max(type) from product Group by maker having count(distinct type) = 1 and count(model) > 1
+task 41
+task 42
+Select ship, battle from Outcomes where result = 'sunk'
+task 43
+select name from battles where year(date) not in (select launched from ships where launched is not null)
+task 44
+Select name from Ships where name LIKE 'R%' union Select Ship From Outcomes where ship like 'R%'
+task 45
+Select name from ships where name like '% % %' union Select ship from outcomes
+where ship like '% % %'
+task 46
+Select ss.ship, displacement, numGuns from (Select name as ship, displacement, numGuns from Ships s join Classes c on c.class=s.class UNION
+Select class as ship, displacement, numGuns from Classes c) as a right join Outcomes ss on ss.ship=a.ship where battle = 'Guadalcanal'
+task 48
+Select aa.class from Classes aa left join Ships s on s.class = aa.class
+where aa.class in (Select ship from Outcomes where result = 'sunk')or
+s.name in (Select ship from Outcomes where result = 'sunk') Group by aa.class
+task 49
+Select Ships.name from Classes join Ships on Classes.class = ships.class where bore = 16 union Select Outcomes.ship from Outcomes join Classes on Classes.class = Outcomes.ship where bore = 16
+task 50
+Select distinct battle from outcomes where ship in (select name from ships where class = 'kongo')
+task 52
+Select distinct a.name from ships a join classes b on b.class = a.class
+where upper(b.country) = 'JAPAN' and (numguns>=9 or numguns is null)
+and (displacement <= 65000 OR b.displacement is null) and (b.bore < 19 OR b.bore is null) and b.type = 'bb'
+task 53
+Select round(avg(numGuns),2) from classes where type='bb'
+task 55
+Select a.class, b.y from classes a left join (Select class, min(launched) as y from ships Group by class) as b on a.class = b.class
+task 56
+Select a.class, count(s.ship) from classes a left join (Select o.ship, aa.class
+from outcomes o left join ships aa ON aa.name = o.ship where o.result = 'sunk') as s on s.class = a.class or s.ship = a.class Group by a.class
+task 62
+Select(Select sum(inc) from Income_o where date<'2001-04-15')
+(Select sum(out) from Outcome_o where date<'2001-04-15') as remain
+task 63
+Select name from Passenger where a in (Select a from b Group by place, a having count(*)>1)
