@@ -1,0 +1,31 @@
+///////
+create table "groups"
+(
+"id" serial primary key,
+"name" varchar(12) not null,
+"faculty" varchar(10) not null,
+);
+///////
+insert into "groups"(name, faculty) values('11-001', 'ITIS');
+insert into "groups"(name, faculty) values('11-911', 'ITIS');
+insert into "groups"(name, faculty) values('07-503', 'IVMIIT');
+insert into "groups"(name, faculty) values('11-003', 'ITIS');
+insert into "groups"(name, faculty) values('07-511', 'IVMIIT');
+select * from groups;
+///////
+create table "students"
+(
+"id" serial primary key,
+"name" varchar(15) not null,
+"age" int not null check(age > 14),
+"group_id" int references groups(id)
+);
+///////
+insert into "students"(name, age, group_id) values('Семён', 18, 1);
+insert into "students"(name, age, group_id) values('Камилла', 18, 2);
+insert into "students"(name, age, group_id) values('Алина', 20, 3);
+insert into "students"(name, age, group_id) values('Анна', 19, 4);
+insert into "students"(name, age, group_id) values('Алексей', 19, 5);
+insert into "students"(name, age, group_id) values('Анатолий', 21, 6);
+select * from students;
+///////
