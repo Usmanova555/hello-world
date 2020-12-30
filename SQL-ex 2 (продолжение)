@@ -1,0 +1,24 @@
+task 54
+Select cast(avg(numguns*1.0) as numeric (4,2)) as AVG_nmg 
+from (select ship, type, numguns from Outcomes left join Classes on ship = class  
+union select name, type, numguns from Ships as s inner join Classes as C on c.class = s.class ) as t where type = 'bb'
+task 57
+task 58
+select main_maker ,main_type ,convert(NUMERIC(6,2),((sub_num*100.00)/(total_num*100.00)*100.00))  
+from (select count(p5.model) total_num ,p5.maker main_maker from product p5 group by p5.maker) p6 join (select p3.maker sub_maker ,p3.type main_type ,count(p4.model) sub_num from (select p1.maker maker, p2.type type from product p1 cross join product p2 group by p1.maker, p2.type) p3 left join product p4 on p3.maker = p4.maker and p3.type = p4.type group by  p3.maker,p3.type) p7 ON p7.sub_maker = p6.main_maker
+task 59
+select a.point, case when o is null then i else i-o end remain from (select point, sum(inc) as i from Income_o group by point) as A left join (select point, sum(out) as o from Outcome_o group by point) as B on A.point=B.point
+task 60
+select a.point,  case when o is null  then i else i-o end remain FROM (select point, sum(inc) as i from Income_o where '20010415' > date group by point) as A left join (select point, sum(out) as o from Outcome_o  where '20010415' > date group by point) as B on A.point=B.point  
+task 61
+select (select sum(inc) from income_o) - (select sum(out) from outcome_o) as remain  
+task 67
+select count(qqq) as qty from (select town_from as qqq, town_to, count(plane) as cp from Trip group by town_from, town_to having count(plane) >= all(select count(plane)  from Trip group by town_from, town_to) ) as tab 
+task 71
+select p.maker from product p where p.type='pc' group by p.maker having count(distinct p.model) = (select count(distinct pc.model) from pc where pc.model in (select distinct pr.model from product pr where pr.maker=p.maker))
+task 74
+select c.country, c.class from classes c where c.country like (case when  (select count(*) from classes c where c.country='Russia' group by c.country) is not null then ('Russia') else ('%') end) 
+task 80
+select distinct maker from product where maker not in (select maker from product  where model in (select model from product where type='pc' except select model from pc)) 
+task 91
+select count(*) from (select maker from product group by maker having count(model)=1) as a
